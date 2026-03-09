@@ -15,7 +15,7 @@ const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
 
 // ─── API helpers ──────────────────────────────────────────────────────────────
 async function callClaude(apiKey, system, user, maxTokens=1200) {
-  const r = await fetch("https://api.anthropic.com/v1/messages", {
+  const r = await fetch("/.netlify/functions/claude", {
     method:"POST",
     headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01"},
     body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:maxTokens,system,messages:[{role:"user",content:user}]}),
@@ -140,7 +140,7 @@ function ApiKeyScreen({onSubmit}) {
     if(!key.startsWith("sk-ant-")){setErr("應以 sk-ant- 開頭");return;}
     setLoading(true);setErr("");
     try{
-      const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:5,messages:[{role:"user",content:"hi"}]})});
+      const r=await fetch("/.netlify/functions/claude",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:5,messages:[{role:"user",content:"hi"}]})});
       const d=await r.json();
       if(d.error)throw new Error(d.error.message);
       try{sessionStorage.setItem("pm_key",key);}catch{}
